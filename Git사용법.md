@@ -208,7 +208,7 @@ git status
 ```bash
 git add .
 git commit -m 'Git 기초'
-git push -u origin mater
+git push -u origin master
 ```
 
 
