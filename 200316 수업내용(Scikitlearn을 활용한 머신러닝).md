@@ -659,10 +659,10 @@ dt.get_depth()
 - decision tree(최적 depth)
 - train, test(정확도)
 
-미완성
+## Train data 전처리
 
 ```python
-train = pd.read_csv("../titanic/train.csv")
+train = pd.read_csv("../data_for_analysis/titanic/train.csv")
 train.head()
 ```
 
@@ -741,7 +741,7 @@ train.groupby('name_exr').size()
 ```
 
 ```python
-train.name_exr = train.name_exr.replace(['Capt', 'Col', 'Countess', 'Don', 'Dr', 'Jonkheer', 'Lady', 'Major', 'Mlle', 'Mme', 'Ms', 'Rev', 'Sir'], 'other')
+train.name_exr = train.name_exr.replace(np.setdiff1d(train.name_exr.unique(),['Mr', 'Mrs', 'Miss', 'Master']), 'other')
 train.name_exr.value_counts()
 # > Mr        517
 # > Miss      182
@@ -761,7 +761,8 @@ train.drop('Sex', axis=1, inplace=True)
 - Age 평균 대체
 
 ```python
-dict(train.groupby('name_exr')['Age'].mean())
+ageMean = dict(train.groupby('name_exr')['Age'].mean())
+ageMean
 # > {'Master': 4.574166666666667,
 # >  'Miss': 21.773972602739725,
 # >  'Mr': 32.368090452261306,
@@ -769,3 +770,132 @@ dict(train.groupby('name_exr')['Age'].mean())
 # >  'other': 42.38461538461539}
 ```
 
+```python
+train.Age = train.Age.fillna(train.name_exr.map(ageMean))
+train.Age
+# > 0      22.000000
+# > 1      38.000000
+# > 2      26.000000
+# > 3      35.000000
+# > 4      35.000000
+# >          ...    
+# > 886    27.000000
+# > 887    19.000000
+# > 888    21.773973
+# > 889    26.000000
+# > 890    32.000000
+# > Name: Age, Length: 891, dtype: float64
+```
+
+- Ticket, Cabin drop
+
+```python
+train = train.drop(['Ticket', 'Cabin'], axis=1)
+train.head()
+```
+
+![image-20200317170302745](image/image-20200317170302745.png)
+
+- Embarked 중 NaN은 "S"로 대체
+
+```python
+train.Embarked[train.Embarked.isnull()] = "S"
+```
+
+- Embarked와 name_exr를 dummy 변수로 변경
+
+```python
+trainDummies = pd.get_dummies(data=train, columns=['Embarked', 'name_exr'], prefix=['Embarked', 'name'])
+trainDummies.head()
+```
+
+![image-20200317171230497](image/image-20200317171230497.png)
+
+## decision tree grid search
+
+```python
+dropSurvived = trainDummies.drop('Survived', 1)
+label = trainDummies.Survived
+```
+
+```python
+from sklearn.model_selection import GridSearchCV
+param = {'max_depth':list(range(2,16))}
+GS = GridSearchCV(tree.DecisionTreeClassifier(), param, cv=5)
+GS.fit(dropSurvived, label)
+print(GS.best_params_)
+print(GS.best_score_)
+# > {'max_depth': 4}
+# > 0.8237934904601572
+```
+
+## Test data 전처리
+
+```python
+test = pd.read_csv("../data_for_analysis/titanic/test.csv")
+
+test.drop('PassengerId', axis=1, inplace=True)
+
+import re
+p = re.compile('([A-Z][a-z]+)[\.]')
+test['name_exr'] = pd.DataFrame(map(p.findall, test.Name))
+test.drop('Name', axis=1, inplace = True)
+
+test.name_exr = test.name_exr.replace(np.setdiff1d(test.name_exr.unique(),['Mr', 'Mrs', 'Miss', 'Master']), 'other')
+test.name_exr.value_counts()
+# > Mr        240
+# > Miss       78
+# > Mrs        72
+# > Master     21
+# > other       7
+# > Name: name_exr, dtype: int64
+```
+
+```python
+test['sex_cat'] = test['Sex'].map({'male':0, 'female':1})
+test.drop('Sex', axis=1, inplace=True)
+
+test.Age = test.Age.fillna(test.name_exr.map(ageMean))
+
+test = test.drop(['Ticket', 'Cabin'], axis=1)
+```
+```python
+# train data에서 비슷한 특징을 갖는 데이터의 평균값으로 대체
+test.Fare[test.Fare.isnull()] = 7.5
+```
+```python
+trainDummies[(trainDummies.Pclass == 3) & (trainDummies.Embarked_S == 1) & (trainDummies.name_Mr == 1) & (trainDummies.Age > 50)].Fare.mean()
+# > 7.4523857142857155
+```
+```python
+test.Embarked[test.Embarked.isnull()] = "S"
+
+testDummies = pd.get_dummies(data=test, columns=['Embarked', 'name_exr'], prefix=['Embarked', 'name'])
+```
+
+## decision tree 적용
+
+```python
+dt = tree.DecisionTreeClassifier(max_depth=4)
+dt.fit(dropSurvived, label)
+# > DecisionTreeClassifier(class_weight=None, criterion='gini', max_depth=4,
+# >                        max_features=None, max_leaf_nodes=None,
+# >                        min_impurity_decrease=0.0, min_impurity_split=None,
+# >                        min_samples_leaf=1, min_samples_split=2,
+# >                        min_weight_fraction_leaf=0.0, presort=False,
+# >                        random_state=None, splitter='best')
+```
+
+```python
+prediction = dt.predict(testDummies)
+pred = pd.DataFrame(prediction)
+pred.head()
+```
+
+![image-20200317171519829](image/image-20200317171519829.png)
+
+```python
+pred.to_csv("submission_decisiontree_200317.csv")
+```
+
+- Score : 0.76076
