@@ -35,33 +35,34 @@
   2. [Overview of load balancers](./191209_Overview_of_load_balancers.md)
   3. [IP Address](./191209_IP_Address.md)
   4. [CIDR 표기법](./191209_CIDR_표기법.md)
-  5. [Subnetting](./191209_ Subnetting.md)
+  5. [Subnetting](./191209_Subnetting.md)
   6. [VLSM](./191209_VLSM.md)
   7. [데이터 전송 방식](./191209_데이터_전송_방식.md)
   8. [10979F Module5](./191209_10979F_Module5.md)
   9. [Azure 실습(subnet 만들기)](./191209_Azure_실습(subnet_만들기).md)
 - 191210
-  0. [CLI](./191210_CLI.md)
+  1. [CLI](./191210_CLI.md)
      - Cloud Shell
      - PowerShell
      - Azure CLI 
-  1. [10979F Module2](./191210_10979F_Module2.md)
+  2. [10979F Module2](./191210_10979F_Module2.md)
      - PowerShell ISE
      - PowerShell Module
      - Azure 가상 머신 포털
-  2. [PowerShell 설치](./191210_PowerShell_설치.md)
-  3. [Az 모듈 설치](./191210_Az_모듈_설치.md)
+  3. [PowerShell 설치](./191210_PowerShell_설치.md)
+  4. [Az 모듈 설치](./191210_Az_모듈_설치.md)
      - PowerShell로 VM 만들기
      - AzureRM 모듈 설치 (옛날)
-  4. [Azure CLI 설치](./191210_Azure_CLI_설치.md)
+  5. [Azure CLI 설치](./191210_Azure_CLI_설치.md)
      - Azure CLI로 VM 만들기
-  5. [10979F Module 5](./191210_10979F_Module 5.md)
-  6. [LoadBalancer](./191210_LoadBalancer.md)
+  6. [10979F Module5](./191210_10979F_Module5.md)
+  7. [LoadBalancer](./191210_LoadBalancer.md)
      - 10979F - Module5(9p. ~ 11p.)
-  7. [VPN](./191210_VPN.md)
+  8. [VPN](./191210_VPN.md)
      - 20533E - Module(30p. ~ 31p.)
-  8. [10979F Lab Answer Key](./191210_10979F_Lab Answer Key.md)
+  9. [10979F Lab Answer Key](./191210_10979F_Lab_Answer_Key.md)
      - VM availability Set(10979F -Module 3 10p.)
+
 - 191211
   1. [Azure Storage](./191211_Azure_Storage.md)
      - 10979F Module6 Lesson1
@@ -105,11 +106,11 @@
        - Record
      - 20410D_07 DNS.pdf
 - 191213
-  0. [시험 리뷰](./191213_시험리뷰.md)
-  1. [Azure DNS](./191213_Azure_DNS.md)
-  2. [ACS(Azure Container Service)](./191213_ACS(Azure_Container_Service).md)
-  3. [AKS(Azure Kubernetes Service)](./191213_AKS(Azure_Kubernetes_Service).md)
-  4. [10979F_LAB_AK_07](./191213_10979F_LAB_AK_07.md)
+  1. [시험 리뷰](./191213_시험리뷰.md)
+  2. [Azure DNS](./191213_Azure_DNS.md)
+  3. [ACS(Azure Container Service)](./191213_ACS(Azure_Container_Service).md)
+  4. [AKS(Azure Kubernetes Service)](./191213_AKS(Azure_Kubernetes_Service).md)
+  5. [10979F_LAB_AK_07](./191213_10979F_LAB_AK_07.md)
 
 ## 참고 사항
 
